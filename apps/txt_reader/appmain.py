@@ -1,7 +1,7 @@
 from play32sys import path, battery
 from play32hw import cpu
 from micropython import const
-from machine import lightsleep
+from play32hw.cpu import sleep as lightsleep
 import uos
 import hal_screen, hal_keypad, hal_battery, hal_sdcard
 import book_reader, book_ui
@@ -18,12 +18,11 @@ SIZE_READ_PAGE = const(8)
 SIZE_COMMIT_AFTER_FLIP = const(16)
 
 # status
-status = STATUS_MENU
 reader = None
 
 # operation
 def main(app_name, *args, **kws):
-    global status, reader
+    global reader
     hal_screen.init()
     hal_keypad.init()
     hal_battery.init()
@@ -50,37 +49,29 @@ def main(app_name, *args, **kws):
     reader.load_book(txt_file_path)
     # 进入主循环
     reader.render()
-    status = STATUS_READER
     main_loop()
 
 def main_loop():
-    global status
-    # hal_keypad.enable_wake_on_press0(hal_keypad.KEY_RIGHT)
-    # hal_keypad.enable_wake_on_press1([hal_keypad.KEY_DOWN])
     battery.init_battery_value_cache(256) # smaller buffer
     with CPU_CONTEXT_SLOW:
         while True:
-            if status == STATUS_MENU:
-                pass
-            elif status == STATUS_READER:
-                for event in hal_keypad.get_key_event():
-                    event_type, key = hal_keypad.parse_key_event(event)
-                    if event_type != hal_keypad.EVENT_KEY_PRESS:
-                        continue
-                    if key == hal_keypad.KEY_UP or key == hal_keypad.KEY_DOWN or key == hal_keypad.KEY_LEFT or key == hal_keypad.KEY_RIGHT:
-                        with CPU_CONTEXT_FAST:
-                            page_offset = 1 if key == hal_keypad.KEY_DOWN or key == hal_keypad.KEY_RIGHT else -1
-                            reader.flip_page_by(page_offset)
-                            reader.render()
-                    elif key == hal_keypad.KEY_A:
-                        reader.commit_bookmark_page()
-                        book_ui.render_status(battery.get_battery_level(), reader)
-                        lightsleep(1000)
+            for event in hal_keypad.get_key_event():
+                event_type, key = hal_keypad.parse_key_event(event)
+                if event_type != hal_keypad.EVENT_KEY_PRESS:
+                    continue
+                if key == hal_keypad.KEY_UP or key == hal_keypad.KEY_DOWN or key == hal_keypad.KEY_LEFT or key == hal_keypad.KEY_RIGHT:
+                    with CPU_CONTEXT_FAST:
+                        page_offset = 1 if key == hal_keypad.KEY_DOWN or key == hal_keypad.KEY_RIGHT else -1
+                        reader.flip_page_by(page_offset)
                         reader.render()
-                    hal_keypad.clear_key_status([key])
+                elif key == hal_keypad.KEY_A:
+                    reader.commit_bookmark_page()
+                    book_ui.render_status(battery.get_battery_level(), reader)
+                    lightsleep(1000)
+                    reader.render()
             if (reader != None) and (not reader.bookmark_loaded):
                 with CPU_CONTEXT_FAST:
                     reader.load_bookmark(SIZE_READ_PAGE)
             else:
-                lightsleep(50)
+                lightsleep(20)
             battery.measure()

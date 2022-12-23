@@ -1,0 +1,11 @@
+{
+    "files.eol": "\n",
+    "python.autoComplete.extraPaths": [
+        "lib",
+        "../play32-dev/lib",
+    ],
+    "python.analysis.extraPaths": [
+        "lib",
+        "../play32-dev/lib",
+    ]
+}
