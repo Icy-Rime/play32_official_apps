@@ -4,7 +4,7 @@ import hal_screen
 
 WHITE = framebuf_helper.get_white_color(hal_screen.get_format())
 SCR_W, SCR_H = hal_screen.get_size()
-FNT: ubmfont.FontDrawUnicode = font.get_font_16px()
+FNT: ubmfont.FontDrawUnicode = font.get_font_8px()
 FNT_W, FNT_H = FNT.get_font_size()
 
 def render_message(msg="加载中", process=0.0):

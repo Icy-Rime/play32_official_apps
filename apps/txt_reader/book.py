@@ -148,4 +148,7 @@ class Book():
                 if ((byt >> 6) == 0b00000011) or (byt < 0b10000000): # utf8 start byte | ascii
                     self.__utf8end = len(self.__buffer) + i
                     break
-            self.get_buffered_string()
+            try:
+                self.get_buffered_string()
+            except:
+                raise Exception("Only support utf-8 encoding")
