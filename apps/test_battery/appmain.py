@@ -36,7 +36,7 @@ def main(app_name, *args, **kws):
     main_loop()
 
 def convert_value_to_volt(value):
-    return 11 * value / 4096 # 0-4095 across voltage range 0.0v - 1.0v
+    return 11 * value / 1000 # value is mv, 0.0v - 1.0v
 
 def measure():
     last_log.append(hal_battery.get_raw_battery_value())
@@ -56,8 +56,8 @@ def generate_battery_level():
     with open(record_path, "rb") as record_file:
         record_file.seek(0, 2)
         size = record_file.tell() // 2
-        # 保留前5%和后5%作为保留电量
-        reserved = size * 5 // 100
+        # 保留前1%和后1%作为保留电量
+        reserved = size * 1 // 100
         avaliable_size = size - reserved - reserved
         for level in range(100):
             index = avaliable_size * level // 100

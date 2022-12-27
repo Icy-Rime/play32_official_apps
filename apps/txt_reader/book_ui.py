@@ -4,7 +4,7 @@ import hal_screen
 
 WHITE = framebuf_helper.get_white_color(hal_screen.get_format())
 SCR_W, SCR_H = hal_screen.get_size()
-FNT: ubmfont.FontDrawUnicode = font.get_font_8px()
+FNT: ubmfont.FontDrawUnicode = font.get_font_16px()
 FNT_W, FNT_H = FNT.get_font_size()
 
 def render_message(msg="加载中", process=0.0):
@@ -13,8 +13,8 @@ def render_message(msg="加载中", process=0.0):
     # prograss bar 7px
     frame.fill_rect(0, 0, int((process * SCR_W) // 1), 7, WHITE)
     # text margin top 8px
-    if bmfont.get_text_line(msg, SCR_W, FNT_W) == 1:
-        t_width = FNT_W * len(msg)
+    if len(bmfont.get_text_lines(msg, FNT, SCR_W, SCR_H)) == 1:
+        t_width = bmfont.get_text_width(msg, FNT)
         t_offset = (SCR_W - t_width) // 2
     else:
         t_offset = 0

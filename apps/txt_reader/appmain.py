@@ -14,9 +14,7 @@ CPU_CONTEXT_FAST = cpu.cpu_speed_context(cpu.FAST)
 CPU_CONTEXT_SLOW = cpu.cpu_speed_context(cpu.VERY_SLOW)
 
 # const
-STATUS_MENU = const(0)
-STATUS_READER = const(1)
-SIZE_READ_PAGE = const(8)
+SIZE_LOAD_PAGE = const(8)
 SIZE_COMMIT_AFTER_FLIP = const(50)
 
 # status
@@ -45,16 +43,17 @@ def open_book():
     pth = select_file(data_dir, "Text Reader", f_dir=False)
     if len(pth) < 1:
         dialog("Please select a text file.")
-        return
+        return False
     if pth.endswith(".txt") or pth.endswith(".TXT"):
         txt_file_path = pth
     else:
         dialog("Please select a .txt file.")
-        return
+        return False
     if txt_file_path == None:
-        return
+        return False
     book_ui.render_message("正在加载书签")
     reader.load_book(txt_file_path)
+    return True
 
 def reader_loop():
     reader.render()
@@ -78,7 +77,7 @@ def reader_loop():
                     return
             if (reader != None) and (not reader.bookmark_loaded):
                 with CPU_CONTEXT_FAST:
-                    reader.load_bookmark(SIZE_READ_PAGE)
+                    reader.load_bookmark(SIZE_LOAD_PAGE)
             else:
                 lightsleep(33)
             battery.measure()
@@ -101,7 +100,8 @@ def main_loop():
         gc.collect()
         sel = select_menu(get_status(), "Reader", ["打开书本", "跳转到", "退出阅读"], "确定", "继续阅读")
         if sel == 0:
-            open_book()
+            if open_book() and reader.book_loaded:
+                reader_loop()
         elif sel == 1:
             if not reader.book_loaded:
                 dialog("请先打开一本书")
@@ -119,7 +119,8 @@ def main_loop():
                 continue
             reader.flip_page_by(page_num - reader.bookmark_current_page)
         elif sel == 2:
-            reader.commit_bookmark_page()
+            if reader.book_loaded:
+                reader.commit_bookmark_page()
             app.reset_and_run_app("")
         else:
             # 默认继续阅读

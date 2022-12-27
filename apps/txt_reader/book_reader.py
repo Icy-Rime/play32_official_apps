@@ -88,16 +88,15 @@ class BookReader():
                 txt = book.get_buffered_string()
                 if len(txt) <= 0:
                     break
-                count = bmfont.get_text_count(txt, SCR_W, SCR_H, FNT_W, FNT_H)
+                count = bmfont.get_text_count(txt, FNT, SCR_W, SCR_H)
                 txt_bytes_size = get_text_utf8_length(txt[:count])
                 page_list.append(txt_bytes_size)
                 book.seek_by(txt_bytes_size)
                 max_pages -= 1
-                gc_collect_small_memory()
             self.bookmark.append_pages(page_list)
             self.bookmark_size += sum(page_list)
             del page_list
-        gc.collect()
+        gc_collect_small_memory()
         return self.bookmark_size == self.book_size # return if finished
     
     def render(self):
