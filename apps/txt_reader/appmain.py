@@ -1,7 +1,7 @@
 from play32sys import path, battery, app
 from play32hw import cpu
 from micropython import const
-from play32hw.cpu import sleep as lightsleep
+from utime import sleep_ms
 import gc
 import hal_screen, hal_keypad, hal_battery, hal_sdcard
 import book_reader, book_ui
@@ -71,15 +71,13 @@ def reader_loop():
                     reader.commit_bookmark_page()
                 elif key == hal_keypad.KEY_A:
                     book_ui.render_status(battery.get_battery_level(), reader)
-                    lightsleep(1000)
+                    sleep_ms(1000)
                     reader.render()
                 elif key == hal_keypad.KEY_B:
                     return
             if (reader != None) and (not reader.bookmark_loaded):
                 with CPU_CONTEXT_FAST:
                     reader.load_bookmark(SIZE_LOAD_PAGE)
-            else:
-                lightsleep(33)
             battery.measure()
 
 def get_status():
