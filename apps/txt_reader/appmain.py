@@ -78,6 +78,8 @@ def reader_loop():
             if (reader != None) and (not reader.bookmark_loaded):
                 with CPU_CONTEXT_FAST:
                     reader.load_bookmark(SIZE_LOAD_PAGE)
+            else:
+                sleep_ms(16)
             battery.measure()
 
 def get_status():
