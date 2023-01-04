@@ -1,8 +1,8 @@
-import hal_screen, hal_keypad, hal_battery
+import hal_screen, hal_keypad, hal_battery, hal_network
 from buildin_resource.font import get_font_8px
 from graphic import framebuf_helper
 from graphic.bmfont import get_text_width
-from play32sys import app, path, network_helper, battery
+from play32sys import app, path, battery
 from play32hw import cpu, hw_config
 from utime import sleep_ms, ticks_ms, ticks_diff, ticks_add, time as local_time, gmtime, mktime
 from number import NumberFont
@@ -65,7 +65,7 @@ def render_time():
 
 def sync_network_time():
     global time_offset
-    wlan = network_helper.connect()
+    wlan = hal_network.connect()
     try:
         p = progress_gen("", "Syncing Time")
         start_at = ticks_ms()
@@ -76,7 +76,7 @@ def sync_network_time():
                 raise Exception("Connect Timeout")
         time_offset = net_time() - local_time()
     finally:
-        network_helper.deactive_all()
+        hal_network.deactive_all()
 
 def get_next_minute_ms():
     current_seconds = gmtime(time_offset + local_time())[5]
