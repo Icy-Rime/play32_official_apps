@@ -11,7 +11,7 @@ from ui.dialog import dialog
 from ui.select import select_list
 from ui.input import input_slide
 from micropython import const
-from ntptime import time as net_time
+from net.ntptime import time as net_time
 
 WHITE = framebuf_helper.get_white_color(hal_screen.get_format())
 SCRW, SCRH = hal_screen.get_size()
