@@ -54,7 +54,7 @@ def render_status():
     frame.vline(0, y_vol_bar, fnt_h, COLOR_WHITE)
     frame.vline(scr_w - 1, y_vol_bar, fnt_h, COLOR_WHITE)
     vol_bar_w = (scr_w - 4) * bee.volume // 9
-    frame.fill_rect(2, y_vol_bar + 1, vol_bar_w, fnt_h - 2, COLOR_WHITE)
+    frame.rect(2, y_vol_bar + 1, vol_bar_w, fnt_h - 2, COLOR_WHITE, 1)
     # playing status
     FONT_8.draw_on_frame("<", frame, 0, scr_h - fnt_h*4, COLOR_WHITE)
     FONT_8.draw_on_frame(">", frame, scr_w - FONT_8.get_char_width(b">"[0]), scr_h - fnt_h*4, COLOR_WHITE)

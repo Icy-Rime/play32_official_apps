@@ -293,7 +293,7 @@ def init(app_path):
 def ready():
     global status, speed
     # update high score
-    high_score_sprite.img.fill_rect(0, 8, t_rex_sence.screen_width, 8, 0)
+    high_score_sprite.img.rect(0, 8, t_rex_sence.screen_width, 8, 0, 1)
     high_score_sprite.img.text(str(int(high_score)), 0, 8, t_rex_sprite.COLOR_WHITE)
     # reset status
     status = 0

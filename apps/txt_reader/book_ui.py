@@ -11,7 +11,7 @@ def render_message(msg="加载中", process=0.0):
     frame = hal_screen.get_framebuffer()
     frame.fill(0)
     # prograss bar 7px
-    frame.fill_rect(0, 0, int((process * SCR_W) // 1), 7, WHITE)
+    frame.rect(0, 0, int((process * SCR_W) // 1), 7, WHITE, 1)
     # text margin top 8px
     if len(bmfont.get_text_lines(msg, FNT, SCR_W, SCR_H)) == 1:
         t_width = bmfont.get_text_width(msg, FNT)
