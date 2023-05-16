@@ -55,8 +55,8 @@ def render_time():
     text_width = get_text_width(minu_str, BIG_NUM)
     BIG_NUM.draw_on_frame(minu_str, frame, HSCRW + 1 + (FW//8), SCRH - FH, WHITE)
     FH8D1 = FH // 8
-    frame.rect(HSCRW - 1, SCRH - FH + FH8D1, 2, FH - FH8D1*2, WHITE, 1)
-    frame.rect(HSCRW - 1, SCRH - FH + FH8D1*3, 2, FH - FH8D1*6, 0, 1)
+    frame.rect(HSCRW - 1, SCRH - FH + FH8D1, 2, FH - FH8D1*2, WHITE, True)
+    frame.rect(HSCRW - 1, SCRH - FH + FH8D1*3, 2, FH - FH8D1*6, 0, True)
     # render battery
     bat_value = battery.get_battery_level()
     bat_width = int(SCRW * bat_value / 100)
