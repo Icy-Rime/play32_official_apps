@@ -324,6 +324,9 @@ def main_loop():
     while True:
         now = ticks_ms()
         time_ms = ticks_diff(now, last_ticks)
+        # limit fps
+        if time_ms < 16:
+            continue
         last_ticks = now
         for event in hal_keypad.get_key_event():
             event_type, key = hal_keypad.parse_key_event(event)
